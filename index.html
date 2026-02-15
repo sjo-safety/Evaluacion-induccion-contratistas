@@ -1,518 +1,407 @@
-
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación de Seguridad y Salud - Amazon SJO</title>
-    
-    <!-- ========================================
-         ESTILOS CSS
-         Diseño responsivo para el formulario
-         ======================================== -->
-    <style>
-        /* Reset de estilos base */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
-        /* Contenedor principal con gradiente de marca Amazon */
-        body { 
-            font-family: Arial, sans-serif; 
-            background: linear-gradient(135deg, #FF9900 0%, #146EB4 100%); 
-            padding: 20px; 
-            min-height: 100vh; 
-        }
-        
-        /* Tarjeta contenedora del formulario */
-        .container { 
-            max-width: 900px; 
-            margin: 0 auto; 
-            background: white; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
-            padding: 40px; 
-        }
-        
-        /* Encabezado del formulario */
-        .header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            border-bottom: 4px solid #FF9900; 
-            padding-bottom: 20px; 
-        }
-        
-        .logo-text { 
-            font-size: 32px; 
-            font-weight: bold; 
-            color: #232F3E; 
-            margin-bottom: 10px; 
-        }
-        
-        h1 { 
-            color: #232F3E; 
-            margin-bottom: 10px; 
-            font-size: 28px; 
-        }
-        
-        .subtitle { 
-            color: #666; 
-            font-size: 14px; 
-            line-height: 1.6; 
-        }
-        
-        /* Alerta de nota mínima */
-        .nota-minima { 
-            background: #FFF3CD; 
-            border: 2px solid #FF9900; 
-            border-radius: 8px; 
-            padding: 15px; 
-            margin: 20px 0; 
-            text-align: center; 
-        }
-        
-        .nota-minima strong { 
-            color: #FF9900; 
-            font-size: 18px; 
-        }
-        
-        /* Secciones del formulario */
-        .section { 
-            margin-bottom: 30px; 
-        }
-        
-        .section-title { 
-            background: #FF9900; 
-            color: white; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-            font-weight: bold; 
-            font-size: 18px; 
-        }
-        
-        /* Estilos de preguntas */
-        .question { 
-            margin-bottom: 25px; 
-            padding: 20px; 
-            background: #F8F9FA; 
-            border-radius: 8px; 
-            border-left: 5px solid #146EB4; 
-        }
-        
-        .question-text { 
-            font-weight: bold; 
-            margin-bottom: 15px; 
-            color: #232F3E; 
-            font-size: 16px; 
-            line-height: 1.5; 
-        }
-        
-        .required { 
-            color: #e74c3c; 
-        }
-        
-        /* Campos de entrada de texto */
-        input[type="text"], 
-        input[type="email"] { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #ddd; 
-            border-radius: 6px; 
-            font-size: 14px; 
-        }
-        
-        input[type="text"]:focus, 
-        input[type="email"]:focus { 
-            outline: none; 
-            border-color: #FF9900; 
-        }
-        
-        /* Contenedor de opciones de respuesta */
-        .options { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-        }
-        
-        .option { 
-            display: flex; 
-            align-items: center; 
-            padding: 12px; 
-            background: white; 
-            border: 2px solid #ddd; 
-            border-radius: 6px; 
-            cursor: pointer; 
-        }
-        
-        .option:hover { 
-            border-color: #FF9900; 
-            background: #FFF8E1; 
-        }
-        
-        .option input[type="radio"] { 
-            margin-right: 12px; 
-            cursor: pointer; 
-            width: 18px; 
-            height: 18px; 
-        }
-        
-        /* Botón de envío */
-        .submit-btn { 
-            background: #FF9900; 
-            color: white; 
-            padding: 16px 40px; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            width: 100%; 
-        }
-        
-        .submit-btn:hover { 
-            background: #E88B00; 
-        }
-        
-        .submit-btn:disabled { 
-            background: #ccc; 
-            cursor: not-allowed; 
-        }
-        
-        /* Pantalla de resultados */
-        .result-container { 
-            display: none; 
-            text-align: center; 
-            padding: 30px; 
-        }
-        
-        .score-display { 
-            font-size: 64px; 
-            font-weight: bold; 
-            color: #FF9900; 
-            margin: 20px 0; 
-        }
-        
-        .score-message { 
-            font-size: 28px; 
-            margin-bottom: 20px; 
-            color: #232F3E; 
-        }
-        
-        .success-badge { 
-            display: inline-block; 
-            padding: 12px 30px; 
-            border-radius: 25px; 
-            font-weight: bold; 
-            margin: 15px 0; 
-            font-size: 20px; 
-        }
-        
-        .badge-aprobado { 
-            background: #2ecc71; 
-            color: white; 
-        }
-        
-        .badge-reprobado { 
-            background: #e74c3c; 
-            color: white; 
-        }
-        
-        /* Indicador de carga */
-        .loading { 
-            display: none; 
-            text-align: center; 
-            padding: 20px; 
-        }
-        
-        .spinner { 
-            border: 4px solid #f3f3f3; 
-            border-top: 4px solid #FF9900; 
-            border-radius: 50%; 
-            width: 50px; 
-            height: 50px; 
-            animation: spin 1s linear infinite; 
-            margin: 0 auto; 
-        }
-        
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
-    </style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Evaluación de Seguridad - Amazon SJO</title>
+
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #FF9900 0%, #146EB4 100%); padding: 20px; min-height: 100vh; }
+
+.container { max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); padding: 40px; }
+
+.header { text-align: center; margin-bottom: 30px; border-bottom: 4px solid #FF9900; padding-bottom: 20px; }
+
+.logo-text { font-size: 32px; font-weight: bold; color: #232F3E; margin-bottom: 10px; }
+
+h1 { color: #232F3E; margin-bottom: 10px; font-size: 28px; }
+
+.subtitle { color: #666; font-size: 14px; line-height: 1.6; }
+
+.nota-minima { background: #FFF3CD; border: 2px solid #FF9900; border-radius: 8px; padding: 15px; margin: 20px 0; text-align: center; }
+
+.nota-minima strong { color: #FF9900; font-size: 18px; }
+
+.section { margin-bottom: 30px; }
+
+.section-title { background: #FF9900; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 18px; }
+
+.question { margin-bottom: 25px; padding: 20px; background: #F8F9FA; border-radius: 8px; border-left: 5px solid #146EB4; }
+
+.question-text { font-weight: bold; margin-bottom: 15px; color: #232F3E; font-size: 16px; line-height: 1.5; }
+
+.required { color: #e74c3c; }
+
+input[type="text"], input[type="email"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; }
+
+input[type="text"]:focus, input[type="email"]:focus { outline: none; border-color: #FF9900; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+
+.option { display: flex; align-items: center; padding: 12px; background: white; border: 2px solid #ddd; border-radius: 6px; cursor: pointer; }
+
+.option:hover { border-color: #FF9900; background: #FFF8E1; }
+
+.option input[type="radio"] { margin-right: 12px; cursor: pointer; width: 18px; height: 18px; }
+
+.submit-btn { background: #FF9900; color: white; padding: 16px 40px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
+
+.submit-btn:hover { background: #E88B00; }
+
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.result-container { display: none; text-align: center; padding: 30px; }
+
+.score-display { font-size: 64px; font-weight: bold; color: #FF9900; margin: 20px 0; }
+
+.score-message { font-size: 28px; margin-bottom: 20px; color: #232F3E; }
+
+.success-badge { display: inline-block; padding: 12px 30px; border-radius: 25px; font-weight: bold; margin: 15px 0; font-size: 20px; }
+
+.badge-aprobado { background: #2ecc71; color: white; }
+
+.badge-reprobado { background: #e74c3c; color: white; }
+
+.loading { display: none; text-align: center; padding: 20px; }
+
+.spinner { border: 4px solid #f3f3f3; border-top: 4px solid #FF9900; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto; }
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+</style>
+
 </head>
 
 <body>
-    <!-- ========================================
-         CONTENEDOR PRINCIPAL DEL FORMULARIO
-         ======================================== -->
-    <div class="container">
-        
-        <!-- Encabezado -->
-        <div class="header">
-            <div class="logo-text">amazon</div>
-            <h1>Evaluación de Seguridad y Salud</h1>
-            <p class="subtitle">Amazon SJO - Costa Rica</p>
-            <p class="subtitle">14 preguntas: 4 de información + 10 de conocimientos</p>
-        </div>
-        
-        <!-- Alerta de nota mínima -->
-        <div class="nota-minima">
-            <p><strong>⚠️ NOTA MÍNIMA: 80% (8 de 10 correctas)</strong></p>
-        </div>
-        
-        <!-- Formulario de evaluación -->
-        <form id="evaluationForm">
-            
-            <!-- Sección 1: Información General -->
-            <div class="section">
-                <div class="section-title">📝 Información General</div>
-                
-                <div class="question">
-                    <div class="question-text">1. Nombre completo <span class="required">*</span></div>
-                    <input type="text" id="nombre" required placeholder="Ingrese su nombre completo">
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">2. Número de cédula <span class="required">*</span></div>
-                    <input type="text" id="cedula" required placeholder="Ej: 1-2345-6789">
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">3. Correo electrónico <span class="required">*</span></div>
-                    <input type="email" id="correo" required placeholder="ejemplo@empresa.com">
-                </div>
-                
-                <div class="question">
-                    <div class="question-text">4. Empresa <span class="required">*</span></div>
-                    <input type="text" id="empresa" required placeholder="Nombre de la empresa">
-                </div>
-            </div>
-            
-            <!-- Sección 2: Evaluación de Conocimientos -->
-            <div class="section">
-                <div class="section-title">🎯 Evaluación de Conocimientos (10 aleatorias de 50)</div>
-                <div id="randomQuestions"></div>
-            </div>
-            
-            <!-- Botón de envío -->
-            <button type="submit" class="submit-btn">✓ Enviar Evaluación</button>
-        </form>
-        
-        <!-- Indicador de carga -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p style="margin-top: 15px; color: #232F3E; font-weight: bold;">Guardando...</p>
-        </div>
-        
-        <!-- Pantalla de resultados -->
-        <div class="result-container" id="resultContainer">
-            <h2>¡Evaluación Completada!</h2>
-            <div class="score-display" id="scoreDisplay"></div>
-            <div class="score-message" id="scoreMessage"></div>
-            <div class="success-badge" id="scoreBadge"></div>
-        </div>
-    </div>
-    
-    <!-- ========================================
-         LÓGICA JAVASCRIPT
-         Sistema de evaluación con preguntas aleatorias
-         ======================================== -->
-    <script>
-        // ========================================
-        // CONFIGURACIÓN
-        // ========================================
-        
-        // URL del Google Apps Script para guardar datos
-        var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDJjKJwucqZ0VOFsCCCxc5VAIhAYe8mGoDO3jRIybQrleGKalkc8aQFmp6dt4iWnE1/exec';
-        
-        // ========================================
-        // BANCO DE PREGUNTAS
-        // 50 preguntas de seguridad y salud
-        // ========================================
-        var bankPreguntas = [
-            {"id":1,"pregunta":"¿Está permitido fumar o vapear dentro de las instalaciones de Amazon?","opciones":["Sí, en áreas designadas","No, está completamente prohibido","Sí, durante los descansos","Solo en exteriores"],"respuesta":"B"},
-            {"id":2,"pregunta":"¿Qué debe hacer antes de operar equipos o maquinaria?","opciones":["Pedir permiso al supervisor","Tener la capacitación adecuada","Usar guantes","Leer el manual"],"respuesta":"B"},
-            {"id":3,"pregunta":"¿Qué está prohibido hacer en las rutas de evacuación?","opciones":["Caminar rápido","Colocar objetos que las obstruyan","Señalizarlas","Usarlas diariamente"],"respuesta":"B"},
-            {"id":4,"pregunta":"¿Se permite trabajar bajo efectos de alcohol o sustancias ilícitas?","opciones":["Sí, si es en pequeñas cantidades","No, está completamente prohibido","Solo con autorización médica","Depende del tipo de trabajo"],"respuesta":"B"},
-            {"id":5,"pregunta":"¿Qué debe evitarse al realizar trabajos que puedan generar activaciones del sistema de incendios?","opciones":["Usar agua","Activar las alarmas innecesariamente","Trabajar en equipo","Usar EPP"],"respuesta":"B"},
-            {"id":6,"pregunta":"¿Está permitido tomar fotografías o videos con el celular en áreas restringidas?","opciones":["Sí, para documentar el trabajo","No, está restringido","Solo con permiso escrito","Solo sin flash"],"respuesta":"B"},
-            {"id":7,"pregunta":"¿Qué actitud debe evitarse en el lugar de trabajo?","opciones":["Trabajar en equipo","Realizar bromas que puedan causar accidentes","Comunicarse constantemente","Seguir procedimientos"],"respuesta":"B"},
-            {"id":8,"pregunta":"¿Qué significa 'tener ojos y mente en la tarea'?","opciones":["Usar lentes de seguridad","Evitar la prisa y concentrarse en lo que se hace","Mirar constantemente al supervisor","Trabajar con los ojos cerrados"],"respuesta":"B"},
-            {"id":9,"pregunta":"¿Puede ingresar a áreas de acceso restringido sin autorización?","opciones":["Sí, si es urgente","No, debe mantenerse fuera","Solo acompañado","Solo durante emergencias"],"respuesta":"B"},
-            {"id":10,"pregunta":"¿Qué es fundamental mantener en todo momento en el área de trabajo?","opciones":["Música ambiental","Orden y limpieza","Temperatura controlada","Iluminación tenue"],"respuesta":"B"},
-            {"id":11,"pregunta":"¿Cómo debe estar toda área de trabajo?","opciones":["Iluminada y ventilada","Barricada y señalizada correctamente","Pintada de amarillo","Cerrada con llave"],"respuesta":"B"},
-            {"id":12,"pregunta":"¿Cuál NO es un tipo de señalización para barricadas?","opciones":["Cadenas","Conos","Plantas decorativas","Cintas"],"respuesta":"C"},
-            {"id":13,"pregunta":"¿Qué debe estipularse según los peligros identificados?","opciones":["El horario de trabajo","Las zonas peatonales","El color de los uniformes","La temperatura ambiente"],"respuesta":"B"},
-            {"id":14,"pregunta":"¿Cuál de estos elementos se usa para barricadas?","opciones":["Sillas","Mallas","Cajas","Bolsas"],"respuesta":"B"},
-            {"id":15,"pregunta":"¿Por qué son importantes las barricadas?","opciones":["Para decorar el área","Para proteger a las personas de peligros identificados","Para delimitar propiedad","Para almacenar materiales"],"respuesta":"B"},
-            {"id":16,"pregunta":"¿Cuál es el primer paso en la evaluación de EPP?","opciones":["Comprar el equipo","Evaluar los peligros a los que estará expuesto","Consultar al supervisor","Leer el manual"],"respuesta":"B"},
-            {"id":17,"pregunta":"¿Cuándo debe usarse EPP?","opciones":["Siempre, sin excepción","Cuando el peligro persiste después de intentar eliminarlo o reducirlo","Solo en trabajos peligrosos","Cuando lo indique el cliente"],"respuesta":"B"},
-            {"id":18,"pregunta":"¿Qué debe hacerse antes de seleccionar el EPP apropiado?","opciones":["Verificar el presupuesto","Identificar medidas para eliminar o reducir peligros","Consultar con compañeros","Esperar instrucciones"],"respuesta":"B"},
-            {"id":19,"pregunta":"¿El EPP es la primera línea de defensa contra peligros?","opciones":["Sí, siempre","No, es la última después de intentar eliminar o reducir el peligro","Depende del tipo de trabajo","Solo en trabajos en alturas"],"respuesta":"B"},
-            {"id":20,"pregunta":"¿Qué debe verificarse después de identificar medidas de control?","opciones":["El costo","Si se lograron eliminar o reducir los peligros","La disponibilidad","El color del EPP"],"respuesta":"B"},
-            {"id":21,"pregunta":"¿Cuántos años de antigüedad máxima deben tener las SDS?","opciones":["10 años","5 años","3 años","1 año"],"respuesta":"B"},
-            {"id":22,"pregunta":"¿Cómo deben estar los envases de químicos?","opciones":["Abiertos para ventilación","Sin derrames y rotulados","En cualquier condición","Transparentes"],"respuesta":"B"},
-            {"id":23,"pregunta":"¿Qué sistema de etiquetado debe seguirse para químicos?","opciones":["Etiquetas personalizadas","NFPA 704 o SGA","Código de barras","Etiquetas adhesivas comunes"],"respuesta":"B"},
-            {"id":24,"pregunta":"¿Qué es obligatorio tener al manejar químicos?","opciones":["Ventilador","Kit para derrames","Agua embotellada","Teléfono celular"],"respuesta":"B"},
-            {"id":25,"pregunta":"¿Qué tipo de químicos debe evitarse?","opciones":["Líquidos","De alta peligrosidad para la salud o altamente inflamables","Importados","De color oscuro"],"respuesta":"B"},
-            {"id":26,"pregunta":"¿Están permitidas las fajas lumbares?","opciones":["Sí, son obligatorias","No, NO están permitidas","Solo para cargas pesadas","Solo con prescripción médica"],"respuesta":"B"},
-            {"id":27,"pregunta":"¿Qué técnica debe usarse al levantar cargas?","opciones":["Con la espalda recta y piernas extendidas","Con rodillas flexionadas y espalda recta","Inclinándose desde la cintura","Con movimientos rápidos"],"respuesta":"B"},
-            {"id":28,"pregunta":"¿Qué parte del cuerpo debe protegerse especialmente al levantar cargas?","opciones":["Los brazos","La columna vertebral y zona lumbar","Las manos","Los pies"],"respuesta":"B"},
-            {"id":29,"pregunta":"¿Cuántas categorías básicas de separación de residuos existen?","opciones":["2","3 o 5 según el sistema","10","1"],"respuesta":"B"},
-            {"id":30,"pregunta":"¿Qué debe hacer el contratista con residuos especiales o peligrosos?","opciones":["Dejarlos en cualquier contenedor","Gestionar y compartir certificación de disposición","Quemarlos","Enterrarlos"],"respuesta":"B"},
-            {"id":31,"pregunta":"¿Cuál es una categoría de residuos reciclables?","opciones":["Orgánicos","Papel/Cartón","No valorizable","Todas las anteriores"],"respuesta":"B"},
-            {"id":32,"pregunta":"¿Quién es responsable de la gestión adecuada de residuos generados?","opciones":["Amazon únicamente","El contratista","El servicio de limpieza","Cualquier persona"],"respuesta":"B"},
-            {"id":33,"pregunta":"¿Qué tipo de escaleras están permitidas?","opciones":["De madera","De fibra de vidrio","De aluminio","De acero"],"respuesta":"B"},
-            {"id":34,"pregunta":"¿Qué documento es obligatorio para trabajos en alturas?","opciones":["Permiso de conducir","Permiso de trabajo en alturas","Certificado médico","Licencia comercial"],"respuesta":"B"},
-            {"id":35,"pregunta":"¿Qué plan especial se requiere para trabajos en alturas?","opciones":["Plan de negocios","Plan de rescate","Plan de marketing","Plan de capacitación"],"respuesta":"B"},
-            {"id":36,"pregunta":"¿En qué estado debe estar el equipo de trabajo en alturas?","opciones":["Usado pero funcional","Certificado y en buen estado","Nuevo sin usar","Cualquier estado"],"respuesta":"B"},
-            {"id":37,"pregunta":"¿Qué son trabajos en caliente?","opciones":["Trabajos bajo el sol","Trabajos que generan chispas, calor o llama abierta","Trabajos en verano","Trabajos con agua caliente"],"respuesta":"B"},
-            {"id":38,"pregunta":"¿Qué conocimiento adicional debe tener el personal de trabajos en caliente?","opciones":["Primeros auxilios","Combate de incendios","Electricidad","Plomería"],"respuesta":"B"},
-            {"id":39,"pregunta":"¿Qué tipo de EPP se requiere para trabajos en caliente?","opciones":["EPP estándar","EPP especial para trabajos en caliente","Solo guantes","Solo casco"],"respuesta":"B"},
-            {"id":40,"pregunta":"¿Qué plan especial se requiere para trabajos eléctricos?","opciones":["Plan de emergencia","Plan LOTTO","Plan de evacuación","Plan de comunicación"],"respuesta":"B"},
-            {"id":41,"pregunta":"¿Qué tipo de EPP se necesita para trabajos eléctricos?","opciones":["EPP común","EPP especial dieléctrico","Solo guantes de cuero","Solo botas"],"respuesta":"B"},
-            {"id":42,"pregunta":"¿Qué debe medirse antes de trabajos eléctricos?","opciones":["La temperatura","Cero presencia de energía","La humedad","La presión atmosférica"],"respuesta":"B"},
-            {"id":43,"pregunta":"¿Qué mediciones son obligatorias en espacios confinados?","opciones":["De temperatura","De atmósfera","De ruido","De luz"],"respuesta":"B"},
-            {"id":44,"pregunta":"¿Qué equipo especial se requiere para espacios confinados?","opciones":["Equipo de comunicación","Equipo de rescate","Equipo de iluminación","Equipo de ventilación"],"respuesta":"B"},
-            {"id":45,"pregunta":"¿Cómo debe tratarse una alarma de evacuación?","opciones":["Con calma, puede ser simulacro","Como emergencia real","Ignorarla si está ocupado","Esperar confirmación"],"respuesta":"B"},
-            {"id":46,"pregunta":"¿Qué NO debe usarse durante un terremoto?","opciones":["Escaleras","Ascensores","Puertas","Ventanas"],"respuesta":"B"},
-            {"id":47,"pregunta":"¿Qué debe hacer si ve humo o fuego?","opciones":["Intentar apagarlo primero","Activar la alarma rápidamente","Tomar fotografías","Buscar un extintor"],"respuesta":"B"},
-            {"id":48,"pregunta":"¿Qué debe hacer en una emergencia médica?","opciones":["Llevar a la persona al hospital","Contactar Safety Ambassador, Dr on site u oficial de seguridad","Dar medicamentos","Esperar que mejore"],"respuesta":"B"},
-            {"id":49,"pregunta":"¿Puede reingresar al edificio después de evacuar?","opciones":["Sí, cuando quiera","No, sin orden de Safety Ambassadors o comandante de incidentes","Sí, si olvidó algo importante","Depende de la emergencia"],"respuesta":"B"},
-            {"id":50,"pregunta":"¿Qué debe hacer durante un terremoto si no puede refugiarse bajo un escritorio?","opciones":["Correr hacia la salida","Acercarse a pared interior alejada de ventanas, sentarse y cubrir cabeza","Quedarse de pie","Salir por la ventana"],"respuesta":"B"}
-        ];
-        
-        // ========================================
-        // SELECCIÓN ALEATORIA DE PREGUNTAS
-        // Selecciona 10 preguntas aleatorias del banco
-        // ========================================
-        var preguntasSeleccionadas = bankPreguntas.sort(function() {
-            return Math.random() - 0.5;
-        }).slice(0, 10);
-        
-        // ========================================
-        // GENERACIÓN DINÁMICA DE PREGUNTAS
-        // Crea el HTML de las preguntas seleccionadas
-        // ========================================
-        var container = document.getElementById('randomQuestions');
-        
-        for (var i = 0; i < preguntasSeleccionadas.length; i++) {
-            var pregunta = preguntasSeleccionadas[i];
-            var divPregunta = document.createElement('div');
-            divPregunta.className = 'question';
-            
-            // Construir HTML de la pregunta
-            var htmlPregunta = '<div class="question-text">' + (i + 5) + '. ' + pregunta.pregunta + ' <span class="required">*</span></div>';
-            htmlPregunta += '<div class="options">';
-            
-            // Construir opciones de respuesta
-            for (var j = 0; j < pregunta.opciones.length; j++) {
-                var letra = String.fromCharCode(65 + j); // A, B, C, D
-                htmlPregunta += '<label class="option">';
-                htmlPregunta += '<input type="radio" name="q' + pregunta.id + '" value="' + letra + '" required>';
-                htmlPregunta += '<span>' + letra + '. ' + pregunta.opciones[j] + '</span>';
-                htmlPregunta += '</label>';
-            }
-            
-            htmlPregunta += '</div>';
-            divPregunta.innerHTML = htmlPregunta;
-            container.appendChild(divPregunta);
-        }
-        
-        // ========================================
-        // MANEJO DEL ENVÍO DEL FORMULARIO
-        // Procesa las respuestas y envía a Google Sheets
-        // ========================================
-        document.getElementById('evaluationForm').addEventListener('submit', function(evento) {
-            evento.preventDefault();
-            
-            // Referencias a elementos del DOM
-            var loading = document.getElementById('loading');
-            var resultContainer = document.getElementById('resultContainer');
-            
-            // Mostrar indicador de carga
-            loading.style.display = 'block';
-            
-            // ========================================
-            // CALIFICACIÓN DE RESPUESTAS
-            // ========================================
-            var respuestasCorrectas = 0;
-            var respuestasDetalladas = [];
-            
-            for (var i = 0; i < preguntasSeleccionadas.length; i++) {
-                var pregunta = preguntasSeleccionadas[i];
-                var inputSeleccionado = document.querySelector('input[name="q' + pregunta.id + '"]:checked');
-                var respuestaUsuario = inputSeleccionado ? inputSeleccionado.value : '';
-                var esCorrecta = respuestaUsuario === pregunta.respuesta;
-                
-                if (esCorrecta) {
-                    respuestasCorrectas++;
-                }
-                
-                respuestasDetalladas.push({
-                    numero: i + 1,
-                    pregunta: pregunta.pregunta,
-                    respuesta: respuestaUsuario,
-                    correcta: pregunta.respuesta,
-                    es_correcta: esCorrecta
-                });
-            }
-            
-            // ========================================
-            // CÁLCULO DE CALIFICACIÓN
-            // ========================================
-            var porcentaje = (respuestasCorrectas / 10) * 100;
-            var aprobado = porcentaje >= 80;
-            
-            // ========================================
-            // PREPARACIÓN DE DATOS PARA ENVÍO
-            // ========================================
-            var datosFormulario = {
-                timestamp: new Date().toLocaleString('es-CR', {timeZone: 'America/Costa_Rica'}),
-                nombre: document.getElementById('nombre').value,
-                cedula: document.getElementById('cedula').value,
-                correo: document.getElementById('correo').value,
-                empresa: document.getElementById('empresa').value,
-                respuestas: respuestasDetalladas,
-                puntaje: respuestasCorrectas + '/10',
-                porcentaje: porcentaje.toFixed(1) + '%',
-                calificacion: aprobado ? 'APROBADO' : 'REPROBADO',
-                preguntas_ids: preguntasSeleccionadas.map(function(p) {
-                    return p.id;
-                }).join(', ')
-            };
-            
-            // ========================================
-            // ENVÍO A GOOGLE SHEETS
-            // ========================================
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datosFormulario)
-            })
-            .then(function() {
-                // Ocultar indicador de carga
-                loading.style.display = 'none';
-                
-                // Ocultar formulario
-                document.getElementById('evaluationForm').style.display = 'none';
-                
-                // Mostrar resultados
-                resultContainer.style.display = 'block';
-                
-                // Actualizar elementos de resultado
-                document.getElementById('scoreDisplay').textContent = respuestasCorrectas + '/10';
-                document.getElementById('scoreMessage').textContent = porcentaje.toFixed(1) + '%';
-                document.getElementById('scoreBadge').textContent = aprobado ? 'APROBADO ✓' : 'REPROBADO ✗';
-                document.getElementById('scoreBadge').className = 'success-badge ' + (aprobado ? 'badge-aprobado' : 'badge-reprobado');
-            })
-            .catch(function(error) {
-                console.error('Error al enviar:', error);
-                loading.style.display = 'none';
-                alert('Error al enviar
+
+<div class="container">
+
+<div class="header">
+
+<div class="logo-text">amazon</div>
+
+<h1>Evaluación de Seguridad y Salud</h1>
+
+<p class="subtitle">Amazon SJO - Costa Rica</p>
+
+<p class="subtitle">14 preguntas: 4 de información + 10 de conocimientos</p>
+
+</div>
+
+<div class="nota-minima">
+
+<p><strong>⚠️ NOTA MÍNIMA: 80% (8 de 10 correctas)</strong></p>
+
+</div>
+
+<form id="evaluationForm">
+
+<div class="section">
+
+<div class="section-title">📝 Información General</div>
+
+<div class="question">
+
+<div class="question-text">1. Nombre completo <span class="required">*</span></div>
+
+<input type="text" id="nombre" required placeholder="Ingrese su nombre completo">
+
+</div>
+
+<div class="question">
+
+<div class="question-text">2. Número de cédula <span class="required">*</span></div>
+
+<input type="text" id="cedula" required placeholder="Ej: 1-2345-6789">
+
+</div>
+
+<div class="question">
+
+<div class="question-text">3. Correo electrónico <span class="required">*</span></div>
+
+<input type="email" id="correo" required placeholder="ejemplo@empresa.com">
+
+</div>
+
+<div class="question">
+
+<div class="question-text">4. Empresa <span class="required">*</span></div>
+
+<input type="text" id="empresa" required placeholder="Nombre de la empresa">
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">🎯 Evaluación de Conocimientos (10 aleatorias de 50)</div>
+
+<div id="randomQuestions"></div>
+
+</div>
+
+<button type="submit" class="submit-btn">✓ Enviar Evaluación</button>
+
+</form>
+
+<div class="loading" id="loading">
+
+<div class="spinner"></div>
+
+<p style="margin-top: 15px; color: #232F3E; font-weight: bold;">Guardando...</p>
+
+</div>
+
+<div class="result-container" id="resultContainer">
+
+<h2>¡Evaluación Completada!</h2>
+
+<div class="score-display" id="scoreDisplay"></div>
+
+<div class="score-message" id="scoreMessage"></div>
+
+<div class="success-badge" id="scoreBadge"></div>
+
+</div>
+
+</div>
+
+<script>
+
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDJjKJwucqZ0VOFsCCCxc5VAIhAYe8mGoDO3jRIybQrleGKalkc8aQFmp6dt4iWnE1/exec';
+
+var bankPreguntas = [
+
+{"id":1,"pregunta":"¿Está permitido fumar o vapear dentro de las instalaciones de Amazon?","opciones":["Sí, en áreas designadas","No, está completamente prohibido","Sí, durante los descansos","Solo en exteriores"],"respuesta":"B"},
+
+{"id":2,"pregunta":"¿Qué debe hacer antes de operar equipos o maquinaria?","opciones":["Pedir permiso al supervisor","Tener la capacitación adecuada","Usar guantes","Leer el manual"],"respuesta":"B"},
+
+{"id":3,"pregunta":"¿Qué está prohibido hacer en las rutas de evacuación?","opciones":["Caminar rápido","Colocar objetos que las obstruyan","Señalizarlas","Usarlas diariamente"],"respuesta":"B"},
+
+{"id":4,"pregunta":"¿Se permite trabajar bajo efectos de alcohol o sustancias ilícitas?","opciones":["Sí, si es en pequeñas cantidades","No, está completamente prohibido","Solo con autorización médica","Depende del tipo de trabajo"],"respuesta":"B"},
+
+{"id":5,"pregunta":"¿Qué debe evitarse al realizar trabajos que puedan generar activaciones del sistema de incendios?","opciones":["Usar agua","Activar las alarmas innecesariamente","Trabajar en equipo","Usar EPP"],"respuesta":"B"},
+
+{"id":6,"pregunta":"¿Está permitido tomar fotografías o videos con el celular en áreas restringidas?","opciones":["Sí, para documentar el trabajo","No, está restringido","Solo con permiso escrito","Solo sin flash"],"respuesta":"B"},
+
+{"id":7,"pregunta":"¿Qué actitud debe evitarse en el lugar de trabajo?","opciones":["Trabajar en equipo","Realizar bromas que puedan causar accidentes","Comunicarse constantemente","Seguir procedimientos"],"respuesta":"B"},
+
+{"id":8,"pregunta":"¿Qué significa 'tener ojos y mente en la tarea'?","opciones":["Usar lentes de seguridad","Evitar la prisa y concentrarse en lo que se hace","Mirar constantemente al supervisor","Trabajar con los ojos cerrados"],"respuesta":"B"},
+
+{"id":9,"pregunta":"¿Puede ingresar a áreas de acceso restringido sin autorización?","opciones":["Sí, si es urgente","No, debe mantenerse fuera","Solo acompañado","Solo durante emergencias"],"respuesta":"B"},
+
+{"id":10,"pregunta":"¿Qué es fundamental mantener en todo momento en el área de trabajo?","opciones":["Música ambiental","Orden y limpieza","Temperatura controlada","Iluminación tenue"],"respuesta":"B"},
+
+{"id":11,"pregunta":"¿Cómo debe estar toda área de trabajo?","opciones":["Iluminada y ventilada","Barricada y señalizada correctamente","Pintada de amarillo","Cerrada con llave"],"respuesta":"B"},
+
+{"id":12,"pregunta":"¿Cuál NO es un tipo de señalización para barricadas?","opciones":["Cadenas","Conos","Plantas decorativas","Cintas"],"respuesta":"C"},
+
+{"id":13,"pregunta":"¿Qué debe estipularse según los peligros identificados?","opciones":["El horario de trabajo","Las zonas peatonales","El color de los uniformes","La temperatura ambiente"],"respuesta":"B"},
+
+{"id":14,"pregunta":"¿Cuál de estos elementos se usa para barricadas?","opciones":["Sillas","Mallas","Cajas","Bolsas"],"respuesta":"B"},
+
+{"id":15,"pregunta":"¿Por qué son importantes las barricadas?","opciones":["Para decorar el área","Para proteger a las personas de peligros identificados","Para delimitar propiedad","Para almacenar materiales"],"respuesta":"B"},
+
+{"id":16,"pregunta":"¿Cuál es el primer paso en la evaluación de EPP?","opciones":["Comprar el equipo","Evaluar los peligros a los que estará expuesto","Consultar al supervisor","Leer el manual"],"respuesta":"B"},
+
+{"id":17,"pregunta":"¿Cuándo debe usarse EPP?","opciones":["Siempre, sin excepción","Cuando el peligro persiste después de intentar eliminarlo o reducirlo","Solo en trabajos peligrosos","Cuando lo indique el cliente"],"respuesta":"B"},
+
+{"id":18,"pregunta":"¿Qué debe hacerse antes de seleccionar el EPP apropiado?","opciones":["Verificar el presupuesto","Identificar medidas para eliminar o reducir peligros","Consultar con compañeros","Esperar instrucciones"],"respuesta":"B"},
+
+{"id":19,"pregunta":"¿El EPP es la primera línea de defensa contra peligros?","opciones":["Sí, siempre","No, es la última después de intentar eliminar o reducir el peligro","Depende del tipo de trabajo","Solo en trabajos en alturas"],"respuesta":"B"},
+
+{"id":20,"pregunta":"¿Qué debe verificarse después de identificar medidas de control?","opciones":["El costo","Si se lograron eliminar o reducir los peligros","La disponibilidad","El color del EPP"],"respuesta":"B"},
+
+{"id":21,"pregunta":"¿Cuántos años de antigüedad máxima deben tener las SDS?","opciones":["10 años","5 años","3 años","1 año"],"respuesta":"B"},
+
+{"id":22,"pregunta":"¿Cómo deben estar los envases de químicos?","opciones":["Abiertos para ventilación","Sin derrames y rotulados","En cualquier condición","Transparentes"],"respuesta":"B"},
+
+{"id":23,"pregunta":"¿Qué sistema de etiquetado debe seguirse para químicos?","opciones":["Etiquetas personalizadas","NFPA 704 o SGA","Código de barras","Etiquetas adhesivas comunes"],"respuesta":"B"},
+
+{"id":24,"pregunta":"¿Qué es obligatorio tener al manejar químicos?","opciones":["Ventilador","Kit para derrames","Agua embotellada","Teléfono celular"],"respuesta":"B"},
+
+{"id":25,"pregunta":"¿Qué tipo de químicos debe evitarse?","opciones":["Líquidos","De alta peligrosidad para la salud o altamente inflamables","Importados","De color oscuro"],"respuesta":"B"},
+
+{"id":26,"pregunta":"¿Están permitidas las fajas lumbares?","opciones":["Sí, son obligatorias","No, NO están permitidas","Solo para cargas pesadas","Solo con prescripción médica"],"respuesta":"B"},
+
+{"id":27,"pregunta":"¿Qué técnica debe usarse al levantar cargas?","opciones":["Con la espalda recta y piernas extendidas","Con rodillas flexionadas y espalda recta","Inclinándose desde la cintura","Con movimientos rápidos"],"respuesta":"B"},
+
+{"id":28,"pregunta":"¿Qué parte del cuerpo debe protegerse especialmente al levantar cargas?","opciones":["Los brazos","La columna vertebral y zona lumbar","Las manos","Los pies"],"respuesta":"B"},
+
+{"id":29,"pregunta":"¿Cuántas categorías básicas de separación de residuos existen?","opciones":["2","3 o 5 según el sistema","10","1"],"respuesta":"B"},
+
+{"id":30,"pregunta":"¿Qué debe hacer el contratista con residuos especiales o peligrosos?","opciones":["Dejarlos en cualquier contenedor","Gestionar y compartir certificación de disposición","Quemarlos","Enterrarlos"],"respuesta":"B"},
+
+{"id":31,"pregunta":"¿Cuál es una categoría de residuos reciclables?","opciones":["Orgánicos","Papel/Cartón","No valorizable","Todas las anteriores"],"respuesta":"B"},
+
+{"id":32,"pregunta":"¿Quién es responsable de la gestión adecuada de residuos generados?","opciones":["Amazon únicamente","El contratista","El servicio de limpieza","Cualquier persona"],"respuesta":"B"},
+
+{"id":33,"pregunta":"¿Qué tipo de escaleras están permitidas?","opciones":["De madera","De fibra de vidrio","De aluminio","De acero"],"respuesta":"B"},
+
+{"id":34,"pregunta":"¿Qué documento es obligatorio para trabajos en alturas?","opciones":["Permiso de conducir","Permiso de trabajo en alturas","Certificado médico","Licencia comercial"],"respuesta":"B"},
+
+{"id":35,"pregunta":"¿Qué plan especial se requiere para trabajos en alturas?","opciones":["Plan de negocios","Plan de rescate","Plan de marketing","Plan de capacitación"],"respuesta":"B"},
+
+{"id":36,"pregunta":"¿En qué estado debe estar el equipo de trabajo en alturas?","opciones":["Usado pero funcional","Certificado y en buen estado","Nuevo sin usar","Cualquier estado"],"respuesta":"B"},
+
+{"id":37,"pregunta":"¿Qué son trabajos en caliente?","opciones":["Trabajos bajo el sol","Trabajos que generan chispas, calor o llama abierta","Trabajos en verano","Trabajos con agua caliente"],"respuesta":"B"},
+
+{"id":38,"pregunta":"¿Qué conocimiento adicional debe tener el personal de trabajos en caliente?","opciones":["Primeros auxilios","Combate de incendios","Electricidad","Plomería"],"respuesta":"B"},
+
+{"id":39,"pregunta":"¿Qué tipo de EPP se requiere para trabajos en caliente?","opciones":["EPP estándar","EPP especial para trabajos en caliente","Solo guantes","Solo casco"],"respuesta":"B"},
+
+{"id":40,"pregunta":"¿Qué plan especial se requiere para trabajos eléctricos?","opciones":["Plan de emergencia","Plan LOTTO","Plan de evacuación","Plan de comunicación"],"respuesta":"B"},
+
+{"id":41,"pregunta":"¿Qué tipo de EPP se necesita para trabajos eléctricos?","opciones":["EPP común","EPP especial dieléctrico","Solo guantes de cuero","Solo botas"],"respuesta":"B"},
+
+{"id":42,"pregunta":"¿Qué debe medirse antes de trabajos eléctricos?","opciones":["La temperatura","Cero presencia de energía","La humedad","La presión atmosférica"],"respuesta":"B"},
+
+{"id":43,"pregunta":"¿Qué mediciones son obligatorias en espacios confinados?","opciones":["De temperatura","De atmósfera","De ruido","De luz"],"respuesta":"B"},
+
+{"id":44,"pregunta":"¿Qué equipo especial se requiere para espacios confinados?","opciones":["Equipo de comunicación","Equipo de rescate","Equipo de iluminación","Equipo de ventilación"],"respuesta":"B"},
+
+{"id":45,"pregunta":"¿Cómo debe tratarse una alarma de evacuación?","opciones":["Con calma, puede ser simulacro","Como emergencia real","Ignorarla si está ocupado","Esperar confirmación"],"respuesta":"B"},
+
+{"id":46,"pregunta":"¿Qué NO debe usarse durante un terremoto?","opciones":["Escaleras","Ascensores","Puertas","Ventanas"],"respuesta":"B"},
+
+{"id":47,"pregunta":"¿Qué debe hacer si ve humo o fuego?","opciones":["Intentar apagarlo primero","Activar la alarma rápidamente","Tomar fotografías","Buscar un extintor"],"respuesta":"B"},
+
+{"id":48,"pregunta":"¿Qué debe hacer en una emergencia médica?","opciones":["Llevar a la persona al hospital","Contactar Safety Ambassador, Dr on site u oficial de seguridad","Dar medicamentos","Esperar que mejore"],"respuesta":"B"},
+
+{"id":49,"pregunta":"¿Puede reingresar al edificio después de evacuar?","opciones":["Sí, cuando quiera","No, sin orden de Safety Ambassadors o comandante de incidentes","Sí, si olvidó algo importante","Depende de la emergencia"],"respuesta":"B"},
+
+{"id":50,"pregunta":"¿Qué debe hacer durante un terremoto si no puede refugiarse bajo un escritorio?","opciones":["Correr hacia la salida","Acercarse a pared interior alejada de ventanas, sentarse y cubrir cabeza","Quedarse de pie","Salir por la ventana"],"respuesta":"B"}
+
+];
+
+var preguntasSeleccionadas = bankPreguntas.sort(function(){return Math.random()-0.5}).slice(0,10);
+
+var container = document.getElementById('randomQuestions');
+
+for(var i=0; i<preguntasSeleccionadas.length; i++){
+
+var p = preguntasSeleccionadas[i];
+
+var div = document.createElement('div');
+
+div.className = 'question';
+
+var html = '<div class="question-text">'+(i+5)+'. '+p.pregunta+' <span class="required">*</span></div><div class="options">';
+
+for(var j=0; j<p.opciones.length; j++){
+
+var letra = String.fromCharCode(65+j);
+
+html += '<label class="option"><input type="radio" name="q'+p.id+'" value="'+letra+'" required><span>'+letra+'. '+p.opciones[j]+'</span></label>';
+
+}
+
+html += '</div>';
+
+div.innerHTML = html;
+
+container.appendChild(div);
+
+}
+
+document.getElementById('evaluationForm').addEventListener('submit',function(e){
+
+e.preventDefault();
+
+var loading = document.getElementById('loading');
+
+var resultContainer = document.getElementById('resultContainer');
+
+loading.style.display = 'block';
+
+var correctas = 0;
+
+var respuestas = [];
+
+for(var i=0; i<preguntasSeleccionadas.length; i++){
+
+var p = preguntasSeleccionadas[i];
+
+var checked = document.querySelector('input[name="q'+p.id+'"]:checked');
+
+var resp = checked ? checked.value : '';
+
+var esCorrecta = resp === p.respuesta;
+
+if(esCorrecta) correctas++;
+
+respuestas.push({numero:i+1,pregunta:p.pregunta,respuesta:resp,correcta:p.respuesta,es_correcta:esCorrecta});
+
+}
+
+var porcentaje = (correctas/10)*100;
+
+var aprobado = porcentaje >= 80;
+
+var formData = {
+
+timestamp: new Date().toLocaleString('es-CR',{timeZone:'America/Costa_Rica'}),
+
+nombre: document.getElementById('nombre').value,
+
+cedula: document.getElementById('cedula').value,
+
+correo: document.getElementById('correo').value,
+
+empresa: document.getElementById('empresa').value,
+
+respuestas: respuestas,
+
+puntaje: correctas+'/10',
+
+porcentaje: porcentaje.toFixed(1)+'%',
+
+calificacion: aprobado ? 'APROBADO' : 'REPROBADO',
+
+preguntas_ids: preguntasSeleccionadas.map(function(p){return p.id}).join(', ')
+
+};
+
+fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(formData)}).then(function(){
+
+loading.style.display = 'none';
+
+document.getElementById('evaluationForm').style.display = 'none';
+
+resultContainer.style.display = 'block';
+
+document.getElementById('scoreDisplay').textContent = correctas+'/10';
+
+document.getElementById('scoreMessage').textContent = porcentaje.toFixed(1)+'%';
+
+document.getElementById('scoreBadge').textContent = aprobado ? 'APROBADO ✓' : 'REPROBADO ✗';
+
+document.getElementById('scoreBadge').className = 'success-badge '+(aprobado ? 'badge-aprobado' : 'badge-reprobado');
+
+}).catch(function(error){
+
+console.error('Error:',error);
+
+loading.style.display = 'none';
+
+alert('Error al enviar. Intenta nuevamente.');
+
+});
+
+});
+
+</script>
+
+</body>
+
+</html>
