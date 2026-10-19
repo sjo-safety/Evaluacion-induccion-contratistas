@@ -112,15 +112,14 @@
         .result-status.fail { color: #e74c3c; }
         .result-detail { color: rgba(255,255,255,0.6); margin-bottom: 10px; }
         .review-section { margin-top: 30px; text-align: left; }
-        .review-item {
-            background: rgba(255,255,255,0.03); border-radius: 10px;
-            padding: 15px; margin-bottom: 10px; border-left: 4px solid;
+        .info-card {
+            background: rgba(255,255,255,0.05); border-radius: 10px;
+            padding: 20px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
         }
-        .review-item.correct { border-color: #2ecc71; }
-        .review-item.incorrect { border-color: #e74c3c; }
-        .review-item .q-text { font-weight: 600; margin-bottom: 8px; font-size: 0.9em; }
-        .review-item .your-answer { font-size: 0.85em; color: rgba(255,255,255,0.6); }
-        .review-item .correct-answer { font-size: 0.85em; color: #2ecc71; margin-top: 4px; }
+        .info-card p { margin-bottom: 12px; font-size: 1em; color: rgba(255,255,255,0.8); }
+        .info-card p:last-child { margin-bottom: 0; }
+        .info-card strong { color: #f7c948; }
         .form-container { display: block; }
         .form-container.hidden { display: none; }
     </style>
@@ -347,13 +346,13 @@ function submitEvaluation() {
         fecha: new Date().toLocaleString("es-CR")
     };
     for (var key in questionsData) { payload[key] = questionsData[key]; }
-    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsyU6KSD96piu6yPTQTmuN4NCu_JseGePYh0DkaIUNAkgtQwymPNPz4ZcESYBszIwc/exec";
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDJjKJwucqZ0VOFsCCCxc5VAIhAYe8mGoDO3jRIybQrleGKalkc8aQFmp6dt4iWnE1/exec";
     fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
-        .then(function(){showResults(score,correctCount,passed,reviewData);})
-        .catch(function(){showResults(score,correctCount,passed,reviewData);});
+        .then(function(){showResults(score,correctCount,passed,reviewData,nombre,cedula,correo,empresa);})
+        .catch(function(){showResults(score,correctCount,passed,reviewData,nombre,cedula,correo,empresa);});
 }
 
-function showResults(score, correctCount, passed, reviewData) {
+function showResults(score, correctCount, passed, reviewData, nombre, cedula, correo, empresa) {
     document.getElementById("loadingOverlay").className = "loading-overlay";
     document.getElementById("evaluationForm").className = "form-container hidden";
     document.querySelector(".progress-bar-container").style.display = "none";
@@ -367,15 +366,15 @@ function showResults(score, correctCount, passed, reviewData) {
     st.className = "result-status " + (passed ? "pass" : "fail");
     document.getElementById("resultDetail").textContent = "Respondiste correctamente " + correctCount + " de 10 preguntas.";
     document.getElementById("resultCorrect").textContent = passed ? "Felicidades! Has demostrado un buen conocimiento en seguridad y salud." : "No alcanzaste la nota minima de 80%. Te recomendamos repasar el material y volver a intentarlo.";
-    var html = "<h3 style='margin-bottom:15px;'>Revision de respuestas:</h3>";
-    for (var i = 0; i < reviewData.length; i++) {
-        var item = reviewData[i];
-        html += '<div class="review-item ' + (item.correcta ? "correct" : "incorrect") + '">';
-        html += '<div class="q-text">' + (i + 1) + ". " + item.pregunta + "</div>";
-        html += '<div class="your-answer">' + (item.correcta ? "Correcto" : "Incorrecto") + " - Tu respuesta: " + item.respuestaUsuario + "</div>";
-        if (!item.correcta) { html += '<div class="correct-answer">Respuesta correcta: ' + item.respuestaCorrecta + "</div>"; }
-        html += "</div>";
-    }
+    var html = "<h3 style='margin-bottom:15px;'>Datos del evaluado:</h3>";
+    html += '<div class="info-card">';
+    html += '<p><strong>Nombre:</strong> ' + nombre + '</p>';
+    html += '<p><strong>Cedula:</strong> ' + cedula + '</p>';
+    html += '<p><strong>Correo:</strong> ' + correo + '</p>';
+    html += '<p><strong>Empresa:</strong> ' + empresa + '</p>';
+    html += '<p><strong>Nota obtenida:</strong> ' + score + '%</p>';
+    html += '<p><strong>Resultado:</strong> <span style="color:' + (passed ? '#2ecc71' : '#e74c3c') + ';font-size:1.1em;font-weight:700;">' + (passed ? 'APROBADO' : 'REPROBADO') + '</span></p>';
+    html += '</div>';
     document.getElementById("reviewSection").innerHTML = html;
     window.scrollTo({top:0,behavior:"smooth"});
 }
