@@ -318,7 +318,8 @@ function submitEvaluation() {
         if (!answered) { alert("Por favor responda todas las preguntas de conocimientos."); return; }
     }
     var correctCount = 0;
-    var reviewData = [];
+    var answers = [];
+    var ids = [];
     for (var i = 0; i < 10; i++) {
         var radios = document.getElementsByName("q" + i);
         var userText = "";
@@ -328,31 +329,35 @@ function submitEvaluation() {
         var correctText = selectedQuestions[i].o[selectedQuestions[i].r];
         var isCorrect = (userText === correctText);
         if (isCorrect) correctCount++;
-        reviewData.push({pregunta: selectedQuestions[i].p, respuestaUsuario: userText, respuestaCorrecta: correctText, correcta: isCorrect});
+        answers.push(isCorrect ? "Correcta" : "Incorrecta");
+        ids.push(selectedQuestions[i].id);
     }
     var score = (correctCount / 10) * 100;
     var passed = score >= 80;
+
     document.getElementById("loadingOverlay").className = "loading-overlay active";
-    var questionsData = {};
-    for (var i = 0; i < 10; i++) {
-        questionsData["pregunta_" + (i + 1)] = selectedQuestions[i].p;
-        questionsData["respuesta_" + (i + 1)] = reviewData[i].respuestaUsuario;
-        questionsData["correcta_" + (i + 1)] = reviewData[i].correcta ? "Si" : "No";
-    }
+
     var payload = {
-        nombre: nombre, cedula: cedula, correo: correo, empresa: empresa,
-        nota: score, correctas: correctCount, total: 10,
-        resultado: passed ? "APROBADO" : "REPROBADO",
-        fecha: new Date().toLocaleString("es-CR")
+        fecha: new Date().toLocaleString("es-CR"),
+        nombre: nombre,
+        cedula: cedula,
+        correo: correo,
+        empresa: empresa,
+        p1: answers[0], p2: answers[1], p3: answers[2], p4: answers[3], p5: answers[4],
+        p6: answers[5], p7: answers[6], p8: answers[7], p9: answers[8], p10: answers[9],
+        preguntas: correctCount + "/10",
+        porcentaje: score + "%",
+        estatus: passed ? "APROBADO" : "REPROBADO",
+        idpreguntas: ids.join(", ")
     };
-    for (var key in questionsData) { payload[key] = questionsData[key]; }
-    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUgb77vjH8FHTws7xL7a3TeBvs9rWDAa0kzXfEva73RSpgoFfDl02EMYuv_jmvpvha/exec";
-    fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
-        .then(function(){showResults(score,correctCount,passed,reviewData,nombre,cedula,correo,empresa);})
-        .catch(function(){showResults(score,correctCount,passed,reviewData,nombre,cedula,correo,empresa);});
+
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjme9jTs7XRcy5tOFzPpZNA9i31MmyY8nWU6OpwXJlpZ-JDLodF399SHQKojfxA9km/exec";
+    var img = new Image();
+    img.src = SCRIPT_URL + "?data=" + encodeURIComponent(JSON.stringify(payload));
+    setTimeout(function(){ showResults(score, correctCount, passed, nombre, cedula, correo, empresa); }, 2500);
 }
 
-function showResults(score, correctCount, passed, reviewData, nombre, cedula, correo, empresa) {
+function showResults(score, correctCount, passed, nombre, cedula, correo, empresa) {
     document.getElementById("loadingOverlay").className = "loading-overlay";
     document.getElementById("evaluationForm").className = "form-container hidden";
     document.querySelector(".progress-bar-container").style.display = "none";
