@@ -347,7 +347,7 @@ function submitEvaluation() {
         fecha: new Date().toLocaleString("es-CR")
     };
     for (var key in questionsData) { payload[key] = questionsData[key]; }
-    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDJjKJwucqZ0VOFsCCCxc5VAIhAYe8mGoDO3jRIybQrleGKalkc8aQFmp6dt4iWnE1/exec";
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsyU6KSD96piu6yPTQTmuN4NCu_JseGePYh0DkaIUNAkgtQwymPNPz4ZcESYBszIwc/exec";
     fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
         .then(function(){showResults(score,correctCount,passed,reviewData);})
         .catch(function(){showResults(score,correctCount,passed,reviewData);});
